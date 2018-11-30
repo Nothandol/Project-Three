@@ -1,4 +1,4 @@
-{{-- @extends('layouts.app')
+<!-- {{-- @extends('layouts.app')
 @section('content')
 
  <h3>Documents Repository</h3>
@@ -21,7 +21,7 @@
       <p>No posts found</P>
    @endif   
       </body>    
-@endsection --}}
+@endsection --}} -->
 
 @extends('layouts.app')
 @section('content')
@@ -43,6 +43,8 @@
         <th>Created</th>
         <th>Updated</th>
         <th>File Size</th>
+        <th>Extension</th>
+
       </tr>
       @if(count($uploads) > 0)
       @foreach($uploads as $upload) 
@@ -56,7 +58,9 @@
         <td>{{$upload -> author}}</td>
         <td>{{$upload -> Created_at}}</td>
         <td>{{$upload -> updated_at}}</td>
-        <td>{{$upload -> fileSize}} <br></td> 
+        <td>{{$upload -> fileSize}} </td> 
+        <td>{{$upload -> extension}} <br></td> 
+
         @endforeach
         @else 
    <p>No posts found</P>
@@ -66,7 +70,7 @@
     </tbody>
   </table>
 </div>
-
+<a href ="/create" class ="btn btn-default">Go Back</a>
 <form method= "post" enctype= "multipart/form-data" action= "{{route('upload.file')}}" class="form-horizontal">
   @csrf
   <input type = "file" name = "file">

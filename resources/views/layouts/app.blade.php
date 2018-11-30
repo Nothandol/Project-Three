@@ -21,7 +21,7 @@
     <style>
      html,
     .container {
-        background-color: #FBEEE6;
+        background-color: #E59866;
     }
     #navbar-nav ml-auto{
         color : #900C3F;
@@ -77,7 +77,8 @@
                                     {{ Auth::user()->email }} <span class="caret"></span>
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" >
+                                   
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -96,9 +97,14 @@
         </nav>
 
         <main class="py-4">
+        @include('include.messages')
             @yield('content')
         </main>
     </div>
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace( 'article-ckeditor' );
+    </script>
 </body>
 
 <footer>

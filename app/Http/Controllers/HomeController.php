@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\User;
 class HomeController extends Controller
 {
     /**
@@ -23,8 +23,23 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $name = auth()->user () -> name;
+        $user = User::find($name);
+        $user_id = auth()->user ()->id;
+        $user = User::find($user_id);
+        return view('home')-> with('uploads', $user ->posts);
+    }
+
+    public function download($id)
+    {
+        $post = Upload::findOrFail($id);
+        $path = Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($post->doc_name);
+
+
+        // return response()->download($path, $doc->name, ['Content-Type:' . $type]);
+        return response()->download($path);
     }
 
     
 }
+

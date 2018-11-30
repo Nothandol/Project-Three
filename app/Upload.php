@@ -15,4 +15,9 @@ class Upload extends Model
     //Timestamps
 
     public $timestamps = true;
+
+    //Sinple upload belongs to user
+    public function user(){
+        return $this ->belongsTo(App\User);
+    }
 }

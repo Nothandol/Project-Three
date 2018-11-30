@@ -32,9 +32,18 @@ Route::resource('/uploads', 'UploadsController');
 Route::get('/index', 'Auth\LoginController@index'); //check
 
 
-Route::get('/index','UploadsController@getView')-> name('upload.file');
-Route::post('/index','UploadsController@store');
+Route::get('/uploads','UploadsController@getView')-> name('upload.file');
+Route::post('/uploads','UploadsController@store');
+Route::get('/index', 'UploadsController@index');
 
+Route::get('home/download/{id}','HomeController@download');
+
+Route::get('/create', function () {
+    return view('pages.create');
+});
+
+Route::get('/index', 'DownloadsController@download');
+//Route::get('/create', 'UploadsController@show');
 /*Route::get('/index', function () {
     return view('uploads.index');
 });*/
