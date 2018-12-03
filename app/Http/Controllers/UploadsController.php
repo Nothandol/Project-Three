@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Upload;
 use App\User; 
 use DB;
@@ -41,7 +42,7 @@ class UploadsController extends Controller
         $this -> validate ($request, [
             'title' => 'required',
             'description' =>'required',
-           // 'doc_name' => 'mimes:doc, docx, csv, pdf|max:1999'
+           'doc_name' => 'required|max:1999|mimes:doc,docx,csv,pdf'
         ]);
 
         
@@ -56,21 +57,18 @@ class UploadsController extends Controller
             $fileNameWithExt = $request->file('doc_name')->getClientOriginalName();
             // filename only
             $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            //File size
-           // $filesize =  $request->file->getClientSize();
+           
+          // $filesize =  $request->file->getClientSize();
             //Get file extension
             $extension = $request ->file('doc_name')->getClientOriginalExtension();
           // filename to store
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            //Upload file
+            //Upload file to a folder
             $path = $request->file('doc_name')->storeAs('public/upload', $fileNameToStore);
+         //File size
+            $filesize = Storage::size($path);
 
-           // $file = new Upload;
-            //$file -> title = $filename;
-           // $file -> fileSize = $filesize;
-           // $file -> extension = $extension;
-            //$file->save();
-            //return 'uploaded';
+    
         }
         else {
             $fileNameToStore= 'no file uploaded';
@@ -82,8 +80,21 @@ class UploadsController extends Controller
         $post ->description = $request ->input('description');
         $post ->user_id = auth() ->user() ->id;
         $post ->author = auth() -> user() -> name;
-        $post ->doc_name = $fileNameToStore;
-       // $post->filesize = $filesize;
+        $post ->doc_name = $fileNameWithExt ;
+        $post ->extension = $extension;
+        $post ->file_name = $path;
+        $post->fileSize = $filesize;
+
+      
+        if ($filesize >= 1000000) {
+           $post->fileSize = round($filesize/1000000) . 'MB';
+         }elseif ($filesize >= 1000) {
+           $post->fileSize = round($filesize/1000) . 'KB';
+         }else {
+           $post->fileSize = $filesize;
+         }
+       
+       
         $post ->save();
         return redirect('/home')->with('success', 'Upload successful');
     }
@@ -98,6 +109,7 @@ class UploadsController extends Controller
     {
        $post = Upload::find($id);
        return view('pages.show')->with('post',$post);
+
     }
 
     /**
@@ -108,7 +120,9 @@ class UploadsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $upload = Upload::find($id);
+        return view('pages.edit')->with('upload',$upload);
+ 
     }
 
     /**
@@ -120,7 +134,64 @@ class UploadsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this -> validate ($request, [
+            'title' => 'required',
+            'description' =>'required',
+           'doc_name' => 'required|max:1999|mimes:doc,docx,csv,pdf'
+        ]);
+
+
+         // get the data of uploaded user
+         $author = auth()->user()->name;
+         $user = User::find($author);
+  
+          // Handle file upload
+          if($request->hasFile('doc_name')){
+              
+               // filename with extension
+              $fileNameWithExt = $request->file('doc_name')->getClientOriginalName();
+              // filename only
+              $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+             
+              //Get file extension
+              $extension = $request ->file('doc_name')->getClientOriginalExtension();
+            // filename to store
+              $fileNameToStore = $filename.'_'.time().'.'.$extension;
+              //Upload file to a folder
+              $path = $request->file('doc_name')->storeAs('public/upload', $fileNameToStore);
+           //File size
+              $filesize = Storage::size($path);
+  
+      
+          }
+          else {
+              $fileNameToStore= 'no file uploaded';
+          }
+  
+            //Make Upload
+          $post = Upload::find($id);;
+          $post ->title = $request -> input('title');
+          $post ->description = $request ->input('description');
+          $post ->user_id = auth() ->user() ->id;
+          $post ->author = auth() -> user() -> name;
+          $post ->doc_name = $fileNameWithExt ;
+          $post ->Created_at = 
+          $post ->extension = $extension;
+          $post ->file_name = $path;
+          $post->fileSize = $filesize;
+  
+        
+          if ($filesize >= 1000000) {
+             $post->fileSize = round($filesize/1000000) . 'MB';
+           }elseif ($filesize >= 1000) {
+             $post->fileSize = round($filesize/1000) . 'KB';
+           }else {
+             $post->fileSize = $filesize;
+           }
+         
+         
+          $post ->save();
+          return redirect('/index')->with('success', 'Upload successful');
     }
 
     /**

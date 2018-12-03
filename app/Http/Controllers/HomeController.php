@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Storage;
 class HomeController extends Controller
 {
     /**
@@ -33,7 +34,7 @@ class HomeController extends Controller
     public function download($id)
     {
         $post = Upload::findOrFail($id);
-        $path = Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($post->doc_name);
+        $path = Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($post->file_name);
 
 
         // return response()->download($path, $doc->name, ['Content-Type:' . $type]);

@@ -25,8 +25,10 @@
                          <th>Description</th>
                          <th>Created</th>
                          <th>Updated</th>
-                         <th>File name</th>
-                         <th>               </th>
+                         <th>Extension</th>
+                         <th>Size</th>
+                         
+                         <th>                    </th>
                          <th>Actions</th>
                          <th></th>
                       </tr>
@@ -36,15 +38,17 @@
                          <td>{{$upload -> description}}</td>
                          <td>{{$upload -> Created_at}}</td>
                          <td>{{$upload -> updated_at}}</td>
-                         <td>{{$upload -> doc_name}} </td> 
                          <td>{{$upload -> extension}} </td> 
-                         <th><a href ="/pages/{{$upload ->id}}" class ="btn btn default">Edit</a><th>
-                         <th><a href ="/upload{{$upload ->doc_name}}"download = "{{$upload ->doc_name}}"><button type = "button" class ="btn btn-primary"> <i class = "glyphicon glyphicon-download"><strong>Download</strong></i></a><th>
+                         <td>{{$upload -> fileSize}} </td> 
+                         <td>         </td> 
+                         <th><a href ="pages/{{$upload->id}}/edit" class ="btn btn default">Edit</a><th>
+                         <th><a href ="/home/download/{{$upload ->id}}"download = "{{$upload ->file_name}}"><button type = "button" class ="btn btn-primary"> <i class = "glyphicon glyphicon-download"><strong>Download</strong></i></a><th>
                          </tr>
                         @endforeach 
                       </table>  
                      
                     <p><a href="{{ url('/create') }}">Upload a file</a> </p>
+                    <p><a href="{{ url('/index') }}">View Log</a> </p>
 
                 </div>
             </div>

@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Upload extends Model
 {
     //Table Name
-
     protected $table = 'uploads';
 
     //primary key
     public $primaryKey = 'id';
-    //Timestamps
 
+    //Timestamps
     public $timestamps = true;
 
-    //Sinple upload belongs to user
+    //Single upload belongs to user
     public function user(){
         return $this ->belongsTo(App\User);
     }
